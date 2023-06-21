@@ -1,6 +1,2 @@
-diocesis-mongo/*
-diocesis-postgres/*
-diocesis-rabbitmq/*
-
 .idea
 .vscode
