@@ -1,0 +1,3 @@
+diocesis-mongo/*
+diocesis-postgres/*
+diocesis-rabbitmq/*

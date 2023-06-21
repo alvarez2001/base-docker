@@ -1,0 +1,63 @@
+version: '3.9'
+services:
+  diocesis-service:
+    container_name: diocesis-dockerfile
+    restart: always
+    build: ./diocesis-service
+    ports:
+      - "5000:3000"
+    volumes:
+      - ./diocesis-service/src:/usr/src/app
+    networks:
+      backend:
+    links:
+      - mongo_database_diocesis
+      - postgres_database_diocesis
+      - rabbitmq_event_bus_diocesis
+
+  mongo_database_diocesis:
+    container_name: mongo_database_diocesis
+    image: mongo
+    restart: always
+    ports:
+      - "27020:27017"
+    networks:
+      backend:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: diocesis
+      MONGO_INITDB_ROOT_PASSWORD: Wcny7GhygQJWpj46yk
+    volumes:
+      - ./diocesis-mongo:/data/db
+
+  postgres_database_diocesis:
+    container_name: postgres_database_diocesis
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      backend:
+    environment:
+      POSTGRES_USER: diocesis
+      POSTGRES_PASSWORD: Wcny7GhygQJWpj46yk
+    volumes:
+      - ./diocesis-postgres:/var/lib/postgresql/data
+
+
+  rabbitmq_event_bus_diocesis:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_event_bus_diocesis
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      backend:
+    environment:
+      RABBITMQ_DEFAULT_USER: diocesis
+      RABBITMQ_DEFAULT_PASS: Wcny7GhygQJWpj46yk
+      RABBITMQ_DEFAULT_VHOST: diocesis_vhost
+    volumes:
+      - ./diocesis-rabbitmq:/var/lib/rabbitmq
+
+networks:
+  backend:
